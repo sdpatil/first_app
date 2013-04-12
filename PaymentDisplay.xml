@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+    <ModulePrefs title="Policy Display Gadget" description="Display Policy Display" >
+        <Require feature="embedded-experiences"></Require>
+        <Require feature="open-views"></Require>
+        <Require feature="dynamic-height"/>
+    </ModulePrefs>
+    <Content type="html" view="embedded, default">
+   <![CDATA[
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0-rc.3/handlebars.js"></script>
+  	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+        <script id="create-activity-template" type="text/x-handlebars-template">
+         <table border='1'>
+                <tr>
+                    <td>Policy Number</td>
+                    <td>{{policyNumber}}</td>
+                </tr>
+                <tr>
+                    <td>Agent Id</td>
+                    <td>{{agentId}}</td>
+                </tr>
+                <tr>
+                    <td>Customer Number</td>
+                    <td>{{customerId}}</td>
+                </tr>
+         </table>            
+        </script>
+
+     <script type="text/javascript">
+
+         function initPolicy(){
+     		opensocial.data.getDataContext().registerListener('org.opensocial.ee.context', function(key){
+     			displayPolicy(opensocial.data.getDataContext().getDataSet(key));
+     		});
+     	}
+     	
+     	function displayPolicy(context){
+     	   console.log('Inside PolicyDisplay.displayPolicy');
+            console.log(context);
+            var activityTemplateSource   = $("#create-activity-template").html();
+                var activityTemplate = Handlebars.compile(activityTemplateSource);
+             var activityHtml    = activityTemplate(context);
+                    $('#displayPolicy').append(activityHtml);
+            gadgets.views.setReturnValue("Policy Displayed ");
+            gadgets.window.adjustHeight();
+
+     	}
+          gadgets.util.registerOnLoadHandler(initPolicy);
+        </script>
+
+     <div id="wrapper">
+        <h2>Displaying Payment Details</h2>
+        <div id="displayPolicy"></div>
+        <button onclick='alert('Modify Policy button clicked);'>Payment Action 1</button><br/>
+        <button onclick='alert('Modify Policy button clicked);'>Payment Action 1</button><br/>
+        <button onclick='alert('Modify Policy button clicked);'>Payment Action 1</button><br/>
+
+     </div>
+         
+  ]]>
+    </Content>
+</Module>
